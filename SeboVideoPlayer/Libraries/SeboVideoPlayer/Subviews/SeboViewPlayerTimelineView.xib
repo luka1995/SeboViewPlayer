@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="SeboViewPlayerTimelineView" customModule="SeboVideoPlayer" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="463" height="165"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="93z-Rp-Sqo" customClass="JMMarkSlider" customModule="JMMarkSliderSwift">
+                    <rect key="frame" x="18" y="125" width="427" height="31"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="markWidth">
+                            <real key="value" value="2"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="color" keyPath="markColor">
+                            <color key="value" red="0.092072322416789643" green="0.42000729231575906" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="color" keyPath="selectedBarColor">
+                            <color key="value" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="color" keyPath="unselectedBarColor">
+                            <color key="value" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="sliderDidEnd:" destination="iN0-l3-epB" eventType="touchUpInside" id="Z6i-7D-PYn"/>
+                        <action selector="sliderDidEnd:" destination="iN0-l3-epB" eventType="touchUpOutside" id="uNf-Dl-9rp"/>
+                    </connections>
+                </slider>
+            </subviews>
+            <constraints>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="93z-Rp-Sqo" secondAttribute="bottom" constant="10" id="jxt-58-VeL"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="93z-Rp-Sqo" secondAttribute="trailing" constant="20" id="wgf-aP-Ge9"/>
+                <constraint firstItem="93z-Rp-Sqo" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="yiD-e7-hXG"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <connections>
+                <outlet property="slider" destination="93z-Rp-Sqo" id="KkD-HI-6s8"/>
+            </connections>
+            <point key="canvasLocation" x="28.5" y="-120.5"/>
+        </view>
+        <view contentMode="scaleToFill" id="6kb-ZQ-QEX" customClass="TimelineScrollImageView" customModule="SeboVideoPlayer" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="143" height="91"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="yXO-Sb-YJ3">
+                    <rect key="frame" x="0.0" y="0.0" width="143" height="91"/>
+                    <color key="backgroundColor" red="1" green="0.0099468241870000005" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                </imageView>
+                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="gbK-j6-oNp">
+                    <rect key="frame" x="61" y="35" width="20" height="20"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                </activityIndicatorView>
+            </subviews>
+            <constraints>
+                <constraint firstItem="yXO-Sb-YJ3" firstAttribute="trailing" secondItem="FJr-Ww-gEH" secondAttribute="trailing" id="X20-Fu-Ed1"/>
+                <constraint firstItem="yXO-Sb-YJ3" firstAttribute="bottom" secondItem="FJr-Ww-gEH" secondAttribute="bottom" id="jpZ-yD-PML"/>
+                <constraint firstItem="FJr-Ww-gEH" firstAttribute="leading" secondItem="yXO-Sb-YJ3" secondAttribute="leading" id="kZc-Lu-ggC"/>
+                <constraint firstItem="FJr-Ww-gEH" firstAttribute="top" secondItem="yXO-Sb-YJ3" secondAttribute="top" id="l17-XU-qom"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="FJr-Ww-gEH"/>
+            <connections>
+                <outlet property="activityIndicatorView" destination="gbK-j6-oNp" id="E8S-5b-5WB"/>
+                <outlet property="imageView" destination="yXO-Sb-YJ3" id="P2a-eS-sac"/>
+            </connections>
+            <point key="canvasLocation" x="29" y="-355"/>
+        </view>
+    </objects>
+</document>
