@@ -28,6 +28,10 @@ class SeboVideoPlayerViewController: UIViewController, PlayerPlaybackDelegate, T
     private var videoView: SeboViewPlayerVideoView!
     private var slidesView: SeboViewPlayerSlidesView!
     private var timelineView: SeboViewPlayerTimelineView!
+    private var videoViewTapGestureRecognizer: UITapGestureRecognizer!
+    private var slidesViewTapGestureRecognizer: UITapGestureRecognizer!
+    private var videoViewFullscreen: Bool = false
+    private var slidesViewFullscreen: Bool = false
     
     private var oldCurrentTime: NSInteger = -1
     
@@ -53,12 +57,25 @@ class SeboVideoPlayerViewController: UIViewController, PlayerPlaybackDelegate, T
         self.mainContainerView.backgroundColor = UIColor.clear
         self.view.addSubview(self.mainContainerView)
         
+        // Time container
+        
+        self.timelineView = SeboViewPlayerTimelineView().loadFromNib()
+        self.timelineView.delegate = self
+        self.mainContainerView.addSubview(self.timelineView)
+        
+        self.timelineView.synchronisation = self.synchronisation
+        
         // Slides container
         
         self.slidesView = SeboViewPlayerSlidesView().loadFromNib()
         self.mainContainerView.addSubview(self.slidesView)
         
         self.slidesView.setSlidesCount(value: 0, count: self.synchronisation.count)
+        
+        self.slidesViewTapGestureRecognizer = UITapGestureRecognizer()
+        self.slidesViewTapGestureRecognizer.numberOfTapsRequired = 2
+        self.slidesViewTapGestureRecognizer.addTarget(self, action: #selector(slidesViewTapGestureRecognized(_:)))
+        self.slidesView.addGestureRecognizer(self.slidesViewTapGestureRecognizer)
         
         // Video container
 
@@ -68,13 +85,10 @@ class SeboVideoPlayerViewController: UIViewController, PlayerPlaybackDelegate, T
         
         self.videoView.url = URL(string: self.videoUrl!)
         
-        // Time container
-        
-        self.timelineView = SeboViewPlayerTimelineView().loadFromNib()
-        self.timelineView.delegate = self
-        self.mainContainerView.addSubview(self.timelineView)
-        
-        self.timelineView.synchronisation = self.synchronisation
+        self.videoViewTapGestureRecognizer = UITapGestureRecognizer()
+        self.videoViewTapGestureRecognizer.numberOfTapsRequired = 2
+        self.videoViewTapGestureRecognizer.addTarget(self, action: #selector(videoViewTapGestureRecognized(_:)))
+        self.videoView.addGestureRecognizer(self.videoViewTapGestureRecognizer)
         
         // Observers
         
@@ -99,6 +113,32 @@ class SeboVideoPlayerViewController: UIViewController, PlayerPlaybackDelegate, T
         self.updateOrientationViews()
     }
     
+    // MARK: Actions
+    
+    @objc private func videoViewTapGestureRecognized(_ tapGestureRecognizer: UITapGestureRecognizer) {
+        self.videoViewFullscreen = !self.videoViewFullscreen
+        self.slidesViewFullscreen = false
+        
+        self.slidesView.layer.zPosition = 1
+        self.videoView.layer.zPosition = 2
+        
+        UIView.animate(withDuration: 0.4, animations: {
+            self.updateOrientationViews()
+        });
+    }
+    
+    @objc private func slidesViewTapGestureRecognized(_ tapGestureRecognizer: UITapGestureRecognizer) {
+        self.slidesViewFullscreen = !self.slidesViewFullscreen
+        self.videoViewFullscreen = false
+        
+        self.videoView.layer.zPosition = 1
+        self.slidesView.layer.zPosition = 2
+        
+        UIView.animate(withDuration: 0.4, animations: {
+            self.updateOrientationViews()
+        });
+    }
+    
     // MARK: Methods
     
     private func updateOrientationViews() {
@@ -109,15 +149,31 @@ class SeboVideoPlayerViewController: UIViewController, PlayerPlaybackDelegate, T
         if UIApplication.shared.statusBarOrientation.isLandscape {
             self.timelineView.frame = CGRect(x: self.containersPadding, y: (self.mainContainerView.frame.size.height - timelineHeight - self.containersPadding), width: (self.mainContainerView.frame.size.width - (self.containersPadding * 2)), height: timelineHeight)
             
-            self.videoView.frame = CGRect(x: self.containersPadding, y: self.containersPadding, width: (((self.mainContainerView.frame.size.width - (self.containersPadding * 2)) - self.containersPadding) / 2), height: (self.mainContainerView.frame.size.height - timelineHeight - (self.containersPadding * 3)))
+            if self.videoViewFullscreen == true {
+                self.videoView.frame = self.mainContainerView.frame
+            } else {
+                self.videoView.frame = CGRect(x: self.containersPadding, y: self.containersPadding, width: (((self.mainContainerView.frame.size.width - (self.containersPadding * 2)) - self.containersPadding) / 2), height: (self.mainContainerView.frame.size.height - timelineHeight - (self.containersPadding * 3)))
+            }
             
-            self.slidesView.frame = CGRect(x: ((self.mainContainerView.frame.size.width / 2) + (self.containersPadding / 2)), y: self.containersPadding, width: (((self.mainContainerView.frame.size.width - (self.containersPadding * 2)) - self.containersPadding) / 2), height: (self.mainContainerView.frame.size.height - timelineHeight - (self.containersPadding * 3)))
+            if self.slidesViewFullscreen == true {
+                self.slidesView.frame = self.mainContainerView.frame
+            } else {
+                self.slidesView.frame = CGRect(x: ((self.mainContainerView.frame.size.width / 2) + (self.containersPadding / 2)), y: self.containersPadding, width: (((self.mainContainerView.frame.size.width - (self.containersPadding * 2)) - self.containersPadding) / 2), height: (self.mainContainerView.frame.size.height - timelineHeight - (self.containersPadding * 3)))
+            }
         } else {
             self.timelineView.frame = CGRect(x: self.containersPadding, y: (self.mainContainerView.frame.size.height - timelineHeight - self.containersPadding), width: (self.mainContainerView.frame.size.width - (self.containersPadding * 2)), height: timelineHeight)
             
-            self.videoView.frame = CGRect(x: self.containersPadding, y: self.containersPadding, width: (self.mainContainerView.frame.size.width - (self.containersPadding * 2)), height: ((self.mainContainerView.frame.size.height - timelineHeight - (self.containersPadding * 4)) / 2))
+            if self.videoViewFullscreen == true {
+                self.videoView.frame = self.mainContainerView.frame
+            } else {
+                self.videoView.frame = CGRect(x: self.containersPadding, y: self.containersPadding, width: (self.mainContainerView.frame.size.width - (self.containersPadding * 2)), height: ((self.mainContainerView.frame.size.height - timelineHeight - (self.containersPadding * 4)) / 2))
+            }
             
-            self.slidesView.frame = CGRect(x: self.containersPadding, y: (self.videoView.frame.origin.y + self.videoView.frame.size.height + self.containersPadding), width: (self.mainContainerView.frame.size.width - (self.containersPadding * 2)), height: ((self.mainContainerView.frame.size.height - timelineHeight - (self.containersPadding * 4)) / 2))
+            if self.slidesViewFullscreen == true {
+                self.slidesView.frame = self.mainContainerView.frame
+            } else {
+                self.slidesView.frame = CGRect(x: self.containersPadding, y: (self.videoView.frame.origin.y + self.videoView.frame.size.height + self.containersPadding), width: (self.mainContainerView.frame.size.width - (self.containersPadding * 2)), height: ((self.mainContainerView.frame.size.height - timelineHeight - (self.containersPadding * 4)) / 2))
+            }
         }
     }
     

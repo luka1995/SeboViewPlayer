@@ -137,6 +137,7 @@ class SeboViewPlayerVideoView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        
     }
     
     // MARK: View configuration
