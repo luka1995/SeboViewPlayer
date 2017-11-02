@@ -109,6 +109,10 @@ class SeboViewPlayerVideoView: UIView {
         }
     }
     
+    // MARK: Outlets
+    
+    @IBOutlet var timeCountLabel: UILabel!
+    
     // MARK: Init
     
     func loadFromNib() -> SeboViewPlayerVideoView {
@@ -140,7 +144,7 @@ class SeboViewPlayerVideoView: UIView {
     private func addPlayerView() {
         self.playerView.frame = self.bounds
         self.playerView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.addSubview(self.playerView)
+        self.insertSubview(self.playerView, at: 0)
     }
     
     // MARK: Methods
@@ -176,11 +180,25 @@ class SeboViewPlayerVideoView: UIView {
         }
     }
     
+    private func timeFormat(_ duration: TimeInterval) -> String {
+        let formatter = DateComponentsFormatter()
+        formatter.zeroFormattingBehavior = .pad
+        formatter.allowedUnits = [.minute, .second]
+        
+        if duration >= 3600 {
+            formatter.allowedUnits.insert(.hour)
+        }
+        
+        return formatter.string(from: duration)!
+    }
+    
     // MARK: Player observers
     
     private func addPlayerObservers() {
         self.timeObserver = self.playerView.player?.addPeriodicTimeObserver(forInterval: CMTimeMake(1, 100), queue: DispatchQueue.main, using: { [weak self] timeInterval in
             self?.delegate?.playerCurrentTimeDidChange(currentTime: (self?.currentTime)!, maximumDuration: (self?.maximumDuration)!)
+            
+            self?.timeCountLabel.text = String(format: "%@ - %@", (self?.timeFormat((self?.currentTime)!))!, (self?.timeFormat((self?.maximumDuration)!))!)
         })
     }
     
