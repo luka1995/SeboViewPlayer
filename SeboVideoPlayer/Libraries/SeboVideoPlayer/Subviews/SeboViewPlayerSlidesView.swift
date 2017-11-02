@@ -24,6 +24,13 @@ class SeboViewPlayerSlidesView: UIView {
         return UINib(nibName: String(describing: type(of: self)), bundle: nil).instantiate(withOwner: nil, options: nil)[0] as! SeboViewPlayerSlidesView
     }
     
+    // MARK: Layout
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+    }
+    
     // MARK: Methods
     
     func setSlidesCount(value: NSInteger, count: NSInteger) {

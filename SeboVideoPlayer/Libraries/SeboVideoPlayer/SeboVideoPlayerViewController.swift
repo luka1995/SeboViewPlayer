@@ -7,14 +7,13 @@
 //
 
 import UIKit
-import Player
 import AFNetworking
 import AVFoundation
 
 
 // MARK: SeboVideoPlayerViewController
 
-class SeboVideoPlayerViewController: UIViewController, PlayerDelegate, PlayerPlaybackDelegate {
+class SeboVideoPlayerViewController: UIViewController, PlayerPlaybackDelegate, TimelineDelegate {
     
     // MARK: Constants
     
@@ -22,12 +21,11 @@ class SeboVideoPlayerViewController: UIViewController, PlayerDelegate, PlayerPla
     
     // MARK: Variables
     
-    private var videoUrl: String?
-    private var synchronisation: NSArray?
+    private var videoUrl: String!
+    private var synchronisation: NSArray!
     
     private var mainContainerView: UIView!
-    private var videoContainerView: UIView!
-    private var player: Player!
+    private var videoView: SeboViewPlayerVideoView!
     private var slidesView: SeboViewPlayerSlidesView!
     private var timelineView: SeboViewPlayerTimelineView!
     
@@ -47,10 +45,12 @@ class SeboVideoPlayerViewController: UIViewController, PlayerDelegate, PlayerPla
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.view.backgroundColor = UIColor(white: 0.2, alpha: 1.0)
+        
         // Main contrainer
         
         self.mainContainerView = UIView()
-        self.mainContainerView.backgroundColor = UIColor(white: 0.2, alpha: 1.0)
+        self.mainContainerView.backgroundColor = UIColor.clear
         self.view.addSubview(self.mainContainerView)
         
         // Slides container
@@ -58,37 +58,37 @@ class SeboVideoPlayerViewController: UIViewController, PlayerDelegate, PlayerPla
         self.slidesView = SeboViewPlayerSlidesView().loadFromNib()
         self.mainContainerView.addSubview(self.slidesView)
         
+        self.slidesView.setSlidesCount(value: 0, count: self.synchronisation.count)
+        
         // Video container
 
-        self.videoContainerView = UIView()
-        self.videoContainerView.backgroundColor = UIColor.black
-        self.mainContainerView.addSubview(self.videoContainerView)
-
-        self.player = Player()
-        self.player.autoplay = false
-        self.player.playerDelegate = self
-        self.player.playbackDelegate = self
+        self.videoView = SeboViewPlayerVideoView().loadFromNib()
+        self.videoView.delegate = self
+        self.mainContainerView.addSubview(self.videoView)
         
-        self.addChildViewController(self.player)
-        self.videoContainerView.addSubview(self.player.view)
-        self.player.didMove(toParentViewController: self)
+        self.videoView.url = URL(string: self.videoUrl!)
         
         // Time container
         
         self.timelineView = SeboViewPlayerTimelineView().loadFromNib()
+        self.timelineView.delegate = self
         self.mainContainerView.addSubview(self.timelineView)
         
-        self.timelineView.sliderValueChanged = { (value) in
-            DispatchQueue.main.async {
-                self.player.seek(to: CMTime(value: CMTimeValue(value), timescale: CMTimeScale(1.0)))
-            }
-        }
+        self.timelineView.synchronisation = self.synchronisation
+        
+        // Observers
+        
+        self.addApplicationObservers()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         self.play()
+    }
+    
+    deinit {
+        self.removeApplicationObservers()
     }
     
     // MARK: Layout
@@ -104,58 +104,62 @@ class SeboVideoPlayerViewController: UIViewController, PlayerDelegate, PlayerPla
     private func updateOrientationViews() {
         self.mainContainerView.frame = CGRect(x: (self.view.safeAreaInsets.left + self.view.bounds.origin.x), y: (self.view.safeAreaInsets.top + self.view.bounds.origin.y), width: (self.view.bounds.size.width - (self.view.safeAreaInsets.left + self.view.safeAreaInsets.right)), height: (self.view.bounds.size.height - (self.view.safeAreaInsets.top + self.view.safeAreaInsets.bottom)))
         
-        let timelineHeight = (self.mainContainerView.frame.size.height * 0.3)
+        let timelineHeight = (self.mainContainerView.frame.size.height * 0.16)
         
         if UIApplication.shared.statusBarOrientation.isLandscape {
-            print("Landscape")
+            self.timelineView.frame = CGRect(x: self.containersPadding, y: (self.mainContainerView.frame.size.height - timelineHeight - self.containersPadding), width: (self.mainContainerView.frame.size.width - (self.containersPadding * 2)), height: timelineHeight)
             
-            self.timelineView.frame = CGRect(x: 0.0, y: (self.mainContainerView.frame.size.height - timelineHeight), width: self.mainContainerView.frame.size.width, height: timelineHeight)
+            self.videoView.frame = CGRect(x: self.containersPadding, y: self.containersPadding, width: (((self.mainContainerView.frame.size.width - (self.containersPadding * 2)) - self.containersPadding) / 2), height: (self.mainContainerView.frame.size.height - timelineHeight - (self.containersPadding * 3)))
             
-            self.videoContainerView.frame = CGRect(x: self.containersPadding, y: self.containersPadding, width: (((self.mainContainerView.frame.size.width - (self.containersPadding * 2)) - self.containersPadding) / 2), height: (self.mainContainerView.frame.size.height - timelineHeight - (self.containersPadding * 2)))
-            
-            self.slidesView.frame = CGRect(x: ((self.mainContainerView.frame.size.width / 2) + (self.containersPadding / 2)), y: self.containersPadding, width: (((self.mainContainerView.frame.size.width - (self.containersPadding * 2)) - self.containersPadding) / 2), height: (self.mainContainerView.frame.size.height - timelineHeight - (self.containersPadding * 2)))
+            self.slidesView.frame = CGRect(x: ((self.mainContainerView.frame.size.width / 2) + (self.containersPadding / 2)), y: self.containersPadding, width: (((self.mainContainerView.frame.size.width - (self.containersPadding * 2)) - self.containersPadding) / 2), height: (self.mainContainerView.frame.size.height - timelineHeight - (self.containersPadding * 3)))
         } else {
-            print("Portrait")
+            self.timelineView.frame = CGRect(x: self.containersPadding, y: (self.mainContainerView.frame.size.height - timelineHeight - self.containersPadding), width: (self.mainContainerView.frame.size.width - (self.containersPadding * 2)), height: timelineHeight)
             
-            self.timelineView.frame = CGRect(x: 0.0, y: (self.mainContainerView.frame.size.height - timelineHeight), width: self.mainContainerView.frame.size.width, height: timelineHeight)
+            self.videoView.frame = CGRect(x: self.containersPadding, y: self.containersPadding, width: (self.mainContainerView.frame.size.width - (self.containersPadding * 2)), height: ((self.mainContainerView.frame.size.height - timelineHeight - (self.containersPadding * 4)) / 2))
             
-            self.videoContainerView.frame = CGRect(x: self.containersPadding, y: self.containersPadding, width: (self.mainContainerView.frame.size.width - (self.containersPadding * 2)), height: ((self.mainContainerView.frame.size.height - timelineHeight - (self.containersPadding * 3)) / 2))
-            
-            self.slidesView.frame = CGRect(x: self.containersPadding, y: (self.videoContainerView.frame.origin.y + self.videoContainerView.frame.size.height + self.containersPadding), width: (self.mainContainerView.frame.size.width - (self.containersPadding * 2)), height: ((self.mainContainerView.frame.size.height - timelineHeight - (self.containersPadding * 3)) / 2))
+            self.slidesView.frame = CGRect(x: self.containersPadding, y: (self.videoView.frame.origin.y + self.videoView.frame.size.height + self.containersPadding), width: (self.mainContainerView.frame.size.width - (self.containersPadding * 2)), height: ((self.mainContainerView.frame.size.height - timelineHeight - (self.containersPadding * 4)) / 2))
         }
-        
-        self.player.view.frame = self.videoContainerView.bounds
-    }
-    
-    public func loadVideoWithSynchronisation(videoUrl: String, synchronisation: NSArray, loadingFinished: () -> Void) {
-        self.videoUrl = videoUrl
-        self.synchronisation = synchronisation
-        self.oldCurrentTime = -1
-        
-        if self.player != nil {
-            self.player.url = URL(string: self.videoUrl!)
-            self.stop()
-        }
-        
-        loadingFinished()
     }
     
     func play() {
-        self.player.url = URL(string: self.videoUrl!)
-        self.slidesView.setSlidesCount(value: 0, count: (self.synchronisation?.count)!)
+        //let playerResource = BMPlayerResource(url: URL(string: self.videoUrl!)!)
         
-        self.player.playFromCurrentTime()
+       // self.videoView.player.setVideo(resource: playerResource)
+       // self.videoView.player.play()
+        self.timelineView.playButton.isHidden = true
+        self.timelineView.pauseButton.isHidden = false
+        
+        
+        self.videoView.play()
     }
     
-    func stop() {
-        self.player.stop()
+    func pause() {
+        self.timelineView.playButton.isHidden = false
+        self.timelineView.pauseButton.isHidden = true
+        
+        
+        self.videoView.pause()
     }
     
-    // MARK: PlayerDelegate
+    func moveToImageIndex(index: NSInteger) {
+        let object = self.synchronisation![index] as! NSDictionary
+        let time = object.object(forKey: "time") as! NSInteger
     
-    func playerCurrentTimeDidChange(_ player: Player) {
-        if self.oldCurrentTime != NSInteger(player.currentTime) {
-            self.oldCurrentTime = NSInteger(player.currentTime)
+        self.videoView.playerView.player?.seek(to: CMTime(value: CMTimeValue(time), timescale: CMTimeScale(1.0)))
+    
+        let stringUrl = object.object(forKey: "uri") as? String
+            
+        self.slidesView.imageView.setImageWith(URL(string: stringUrl!)!)
+        self.slidesView.setSlidesCount(value: (index + 1), count: (self.synchronisation?.count)!)
+            
+        self.timelineView.selectIndex(value: index)
+    }
+    
+    // MARK: PlayerPlaybackDelegate
+    
+    func playerCurrentTimeDidChange(currentTime: TimeInterval, maximumDuration: TimeInterval) {
+        if self.oldCurrentTime != NSInteger(currentTime) {
+            self.oldCurrentTime = NSInteger(currentTime)
             
             for i in 0..<(self.synchronisation?.count)! {
                 let object = self.synchronisation![i] as! NSDictionary
@@ -166,51 +170,67 @@ class SeboVideoPlayerViewController: UIViewController, PlayerDelegate, PlayerPla
                     
                     self.slidesView.imageView.setImageWith(URL(string: stringUrl!)!)
                     self.slidesView.setSlidesCount(value: (i + 1), count: (self.synchronisation?.count)!)
+                    
+                    self.timelineView.selectIndex(value: i)
                 }
             }
-            
-            if self.timelineView.slider.state == UIControlState.normal {
-                self.timelineView.slider.value = Float(player.currentTime)
-            }
         }
+        
+        //print("playerCurrentTimeDidChange")
     }
     
-    func playerPlaybackWillStartFromBeginning(_ player: Player) {
+    func playerPlaybackWillStartFromBeginning() {
+        print("playerPlaybackWillStartFromBeginning")
+    }
+    
+    func playerPlaybackWillStart() {
+        print("playerPlaybackWillStart")
+    }
+    
+    func playerPlaybackWillEnd() {
+        print("playerPlaybackWillEnd")
+    }
+    
+    // MARK: TimelineDelegate
+    
+    func playButtonClicked() {
+        self.play()
+    }
+    
+    func pauseButtonClicked() {
+        self.pause()
+    }
+    
+    func imageButtonClicked(index: NSInteger) {
+        self.moveToImageIndex(index: index)
+    }
+    
+    // MARK: Application observers
+    
+    private func addApplicationObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(handleApplicationWillResignActive(_:)), name: .UIApplicationWillResignActive, object: UIApplication.shared)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleApplicationDidBecomeActive(_:)), name: .UIApplicationDidBecomeActive, object: UIApplication.shared)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleApplicationDidEnterBackground(_:)), name: .UIApplicationDidEnterBackground, object: UIApplication.shared)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleApplicationWillEnterForeground(_:)), name: .UIApplicationWillEnterForeground, object: UIApplication.shared)
+    }
+    
+    private func removeApplicationObservers() {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc internal func handleApplicationWillResignActive(_ aNotification: Notification) {
         
     }
     
-    func playerPlaybackDidEnd(_ player: Player) {
+    @objc internal func handleApplicationDidBecomeActive(_ aNotification: Notification) {
         
     }
     
-    func playerPlaybackWillLoop(_ player: Player) {
+    @objc internal func handleApplicationDidEnterBackground(_ aNotification: Notification) {
         
     }
     
-    func playerReady(_ player: Player) {
-        self.timelineView.slider.minimumValue = 0
-        self.timelineView.slider.maximumValue = Float(self.player.maximumDuration)
-        
-        let markPositions = self.synchronisation!.map({ (object) -> (Float) in
-            let time = (object as! NSDictionary).object(forKey: "time") as! Float
-            
-            return (100 / (self.timelineView.slider.maximumValue / time))
-        })
-        self.timelineView.slider.markPositions = markPositions
-        self.timelineView.slider.setNeedsDisplay()
-        
-        self.slidesView.setSlidesCount(value: 0, count: (self.synchronisation?.count)!)
-    }
-    
-    func playerPlaybackStateDidChange(_ player: Player) {
-        
-    }
-    
-    func playerBufferingStateDidChange(_ player: Player) {
-        
-    }
-    
-    func playerBufferTimeDidChange(_ bufferTime: Double) {
+    @objc internal func handleApplicationWillEnterForeground(_ aNoticiation: Notification) {
         
     }
     

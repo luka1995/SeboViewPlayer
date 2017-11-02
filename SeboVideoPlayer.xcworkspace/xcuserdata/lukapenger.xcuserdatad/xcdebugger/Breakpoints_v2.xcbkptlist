@@ -2,4 +2,118 @@
 <Bucket
    type = "0"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SeboVideoPlayer/Libraries/SeboVideoPlayer/Subviews/SeboViewPlayerVideoView.swift"
+            timestampString = "531327488.538388"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "182"
+            endingLineNumber = "182"
+            landmarkName = "addPlayerObservers()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "SeboVideoPlayer.SeboViewPlayerVideoView.(addPlayerObservers in _CAD084AE2A1A87132E0B8200AA1372DD)() -&gt; ()"
+                  moduleName = "SeboVideoPlayer"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/lukapenger/Documents/Projects/Sebo/SeboVideoPlayer/SeboVideoPlayer/Libraries/SeboVideoPlayer/Subviews/SeboViewPlayerVideoView.swift"
+                  timestampString = "531315841.392955"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "140"
+                  endingLineNumber = "140"
+                  offsetFromSymbolStart = "21">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (__C.CMTime) -&gt; () in SeboVideoPlayer.SeboViewPlayerVideoView.(addPlayerObservers in _CAD084AE2A1A87132E0B8200AA1372DD)() -&gt; ()"
+                  moduleName = "SeboVideoPlayer"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/lukapenger/Documents/Projects/Sebo/SeboVideoPlayer/SeboVideoPlayer/Libraries/SeboVideoPlayer/Subviews/SeboViewPlayerVideoView.swift"
+                  timestampString = "531315841.395594"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "140"
+                  endingLineNumber = "140"
+                  offsetFromSymbolStart = "67">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SeboVideoPlayer/Libraries/SeboVideoPlayer/Subviews/SeboViewPlayerTimelineView.swift"
+            timestampString = "531327488.538463"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "106"
+            endingLineNumber = "106"
+            landmarkName = "setupSynchronisation()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SeboVideoPlayer/Libraries/SeboVideoPlayer/Subviews/SeboViewPlayerTimelineView.swift"
+            timestampString = "531327488.538841"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "66"
+            endingLineNumber = "66"
+            landmarkName = "layoutSubviews()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "SeboVideoPlayer.SeboViewPlayerTimelineView.layoutSubviews() -&gt; ()"
+                  moduleName = "SeboVideoPlayer"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/lukapenger/Documents/Projects/Sebo/SeboVideoPlayer/SeboVideoPlayer/Libraries/SeboVideoPlayer/Subviews/SeboViewPlayerTimelineView.swift"
+                  timestampString = "531322967.301205"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "68"
+                  endingLineNumber = "68"
+                  offsetFromSymbolStart = "253">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; () in SeboVideoPlayer.SeboViewPlayerTimelineView.layoutSubviews() -&gt; ()"
+                  moduleName = "SeboVideoPlayer"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/lukapenger/Documents/Projects/Sebo/SeboVideoPlayer/SeboVideoPlayer/Libraries/SeboVideoPlayer/Subviews/SeboViewPlayerTimelineView.swift"
+                  timestampString = "531322967.304805"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "68"
+                  endingLineNumber = "68"
+                  offsetFromSymbolStart = "701">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

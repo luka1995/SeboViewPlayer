@@ -43,12 +43,16 @@ class ViewController: UIViewController {
         if synchronisationPath != nil {
             do {
                 let data = try Data(contentsOf: URL(fileURLWithPath: synchronisationPath!), options: .mappedIfSafe)
-                let synchronisation = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+                let synchronisation = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves) as! NSArray
                 
                 let videoUrl = "http://d171aj4mo5rrkj.cloudfront.net/lectures/2224/video.mp4"
                 
-                let seboViewPlayerViewController = SeboVideoPlayerViewController()
+                let seboViewPlayerViewController = SeboVideoPlayerViewController(videoUrl: videoUrl, synchronisation: synchronisation)
                 
+                self.present(seboViewPlayerViewController, animated: true, completion: nil)
+                
+                
+                /*
                 let alertController = UIAlertController(title: "Loading...", message: "Preparing video and synchronisation.", preferredStyle: .alert)
                 self.present(alertController, animated: true, completion: nil)
                 
@@ -56,7 +60,7 @@ class ViewController: UIViewController {
                     alertController.dismiss(animated: true, completion: {
                         self.present(seboViewPlayerViewController, animated: true, completion: nil)
                     })
-                })
+                })*/
             } catch let error {
                 fatalError("Synchronisation json error: " + error.localizedDescription)
             }
