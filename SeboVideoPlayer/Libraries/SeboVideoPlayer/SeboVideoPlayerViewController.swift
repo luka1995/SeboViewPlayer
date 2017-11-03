@@ -178,13 +178,8 @@ class SeboVideoPlayerViewController: UIViewController, PlayerPlaybackDelegate, T
     }
     
     func play() {
-        //let playerResource = BMPlayerResource(url: URL(string: self.videoUrl!)!)
-        
-       // self.videoView.player.setVideo(resource: playerResource)
-       // self.videoView.player.play()
         self.timelineView.playButton.isHidden = true
         self.timelineView.pauseButton.isHidden = false
-        
         
         self.videoView.play()
     }
@@ -198,17 +193,19 @@ class SeboVideoPlayerViewController: UIViewController, PlayerPlaybackDelegate, T
     }
     
     func moveToImageIndex(index: NSInteger) {
-        let object = self.synchronisation![index] as! NSDictionary
-        let time = object.object(forKey: "time") as! NSInteger
-    
-        self.videoView.playerView.player?.seek(to: CMTime(value: CMTimeValue(time), timescale: CMTimeScale(1.0)))
-    
-        let stringUrl = object.object(forKey: "uri") as? String
+        if self.videoView.playerView.player != nil {
+            let object = self.synchronisation![index] as! NSDictionary
+            let time = object.object(forKey: "time") as! NSInteger
             
-        self.slidesView.imageView.setImageWith(URL(string: stringUrl!)!)
-        self.slidesView.setSlidesCount(value: (index + 1), count: (self.synchronisation?.count)!)
+            self.videoView.playerView.player?.seek(to: CMTime(value: CMTimeValue(time), timescale: CMTimeScale(1.0)))
             
-        self.timelineView.selectIndex(value: index)
+            let stringUrl = object.object(forKey: "uri") as? String
+            
+            self.slidesView.imageView.setImageWith(URL(string: stringUrl!)!)
+            self.slidesView.setSlidesCount(value: (index + 1), count: (self.synchronisation?.count)!)
+            
+            self.timelineView.selectIndex(value: index)
+        }
     }
     
     // MARK: PlayerPlaybackDelegate
@@ -231,8 +228,6 @@ class SeboVideoPlayerViewController: UIViewController, PlayerPlaybackDelegate, T
                 }
             }
         }
-        
-        //print("playerCurrentTimeDidChange")
     }
     
     func playerPlaybackWillStartFromBeginning() {

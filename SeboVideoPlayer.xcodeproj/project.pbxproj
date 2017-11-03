@@ -14,6 +14,8 @@
 		0CB723B01FAB207E004CE8E6 /* SeboViewPlayerVideoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0CB723AF1FAB207E004CE8E6 /* SeboViewPlayerVideoView.xib */; };
 		0CB723B21FAB2A00004CE8E6 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CB723B11FAB29CE004CE8E6 /* AVFoundation.framework */; };
 		0CB723B41FAB2A07004CE8E6 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CB723B31FAB2A05004CE8E6 /* AVKit.framework */; };
+		0CB723B61FAC4E2A004CE8E6 /* ACInterfaceBuilderHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB723B51FAC4E2A004CE8E6 /* ACInterfaceBuilderHelper.swift */; };
+		0CB723B81FAC4E6C004CE8E6 /* ACImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB723B71FAC4E6C004CE8E6 /* ACImageManager.swift */; };
 		0CF532CF1FA132A600D564A3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0CF532CE1FA132A600D564A3 /* Assets.xcassets */; };
 		0CF532D21FA132A600D564A3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0CF532D01FA132A600D564A3 /* LaunchScreen.storyboard */; };
 		0CF532DD1FA1330600D564A3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF532DB1FA1330600D564A3 /* AppDelegate.swift */; };
@@ -33,6 +35,8 @@
 		0CB723AF1FAB207E004CE8E6 /* SeboViewPlayerVideoView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SeboViewPlayerVideoView.xib; sourceTree = "<group>"; };
 		0CB723B11FAB29CE004CE8E6 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		0CB723B31FAB2A05004CE8E6 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
+		0CB723B51FAC4E2A004CE8E6 /* ACInterfaceBuilderHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ACInterfaceBuilderHelper.swift; sourceTree = "<group>"; };
+		0CB723B71FAC4E6C004CE8E6 /* ACImageManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ACImageManager.swift; sourceTree = "<group>"; };
 		0CF532C41FA132A600D564A3 /* SeboVideoPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SeboVideoPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CF532CE1FA132A600D564A3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0CF532D11FA132A600D564A3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -83,6 +87,8 @@
 		0CF532C61FA132A600D564A3 /* SeboVideoPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				0CB723B51FAC4E2A004CE8E6 /* ACInterfaceBuilderHelper.swift */,
+				0CB723B71FAC4E6C004CE8E6 /* ACImageManager.swift */,
 				0CF532E81FA1D83900D564A3 /* synchronisation.json */,
 				0CF532DA1FA1330600D564A3 /* Application */,
 				0CF532DC1FA1330600D564A3 /* Classes */,
@@ -294,6 +300,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0CB723B61FAC4E2A004CE8E6 /* ACInterfaceBuilderHelper.swift in Sources */,
+				0CB723B81FAC4E6C004CE8E6 /* ACImageManager.swift in Sources */,
 				0CF532DD1FA1330600D564A3 /* AppDelegate.swift in Sources */,
 				0CF532EB1FA1EBEF00D564A3 /* SeboViewPlayerTimelineView.swift in Sources */,
 				0C752D631FA1FA60003BF66F /* ViewController.swift in Sources */,

@@ -165,6 +165,7 @@ class TimelineScrollImageView: UIView {
         self.selectedLineView = UIView()
         self.selectedLineView.backgroundColor = UIColor(red: (15.0/255.0), green: (105.0/255.0), blue: (179.0/255.0), alpha: 1.0)
         self.selectedLineView.isHidden = true
+        self.selectedLineView.layer.cornerRadius = (SelectedLineHeight / 2.0)
         self.addSubview(self.selectedLineView)
         
         self.button = UIButton(type: .custom)
