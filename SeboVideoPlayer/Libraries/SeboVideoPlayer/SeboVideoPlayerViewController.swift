@@ -142,7 +142,7 @@ class SeboVideoPlayerViewController: UIViewController, PlayerPlaybackDelegate, T
     // MARK: Methods
     
     private func updateOrientationViews() {
-        self.mainContainerView.frame = CGRect(x: (self.view.safeAreaInsets.left + self.view.bounds.origin.x), y: (self.view.safeAreaInsets.top + self.view.bounds.origin.y), width: (self.view.bounds.size.width - (self.view.safeAreaInsets.left + self.view.safeAreaInsets.right)), height: (self.view.bounds.size.height - (self.view.safeAreaInsets.top + self.view.safeAreaInsets.bottom)))
+        self.mainContainerView.frame = CGRect(x: 0.0, y: 0.0, width: self.view.bounds.size.width, height: self.view.bounds.size.height)
         
         let timelineHeight = (self.mainContainerView.frame.size.height * 0.16)
         
@@ -166,13 +166,13 @@ class SeboVideoPlayerViewController: UIViewController, PlayerPlaybackDelegate, T
             if self.videoViewFullscreen == true {
                 self.videoView.frame = self.mainContainerView.frame
             } else {
-                self.videoView.frame = CGRect(x: self.containersPadding, y: self.containersPadding, width: (self.mainContainerView.frame.size.width - (self.containersPadding * 2)), height: ((self.mainContainerView.frame.size.height - timelineHeight - (self.containersPadding * 4)) / 2))
+                self.videoView.frame = CGRect(x: self.containersPadding, y: (self.containersPadding + self.view.safeAreaInsets.top), width: (self.mainContainerView.frame.size.width - (self.containersPadding * 2)), height: ((self.mainContainerView.frame.size.height - timelineHeight - self.view.safeAreaInsets.top - (self.containersPadding * 4)) / 2))
             }
             
             if self.slidesViewFullscreen == true {
                 self.slidesView.frame = self.mainContainerView.frame
             } else {
-                self.slidesView.frame = CGRect(x: self.containersPadding, y: (self.videoView.frame.origin.y + self.videoView.frame.size.height + self.containersPadding), width: (self.mainContainerView.frame.size.width - (self.containersPadding * 2)), height: ((self.mainContainerView.frame.size.height - timelineHeight - (self.containersPadding * 4)) / 2))
+                self.slidesView.frame = CGRect(x: self.containersPadding, y: (self.videoView.frame.origin.y + self.videoView.frame.size.height + self.containersPadding), width: (self.mainContainerView.frame.size.width - (self.containersPadding * 2)), height: ((self.mainContainerView.frame.size.height - timelineHeight - self.view.safeAreaInsets.top - (self.containersPadding * 4)) / 2))
             }
         }
     }
